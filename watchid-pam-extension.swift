@@ -18,6 +18,10 @@ public func pam_sm_authenticate(pamh: pam_handler_t, flags: Int, argc: Int, argv
     if sudoArguments.contains("-A") || sudoArguments.contains("--askpass") {
         return PAM_IGNORE
     }
+    let envVars = ProcessInfo.processInfo.environment.keys
+    if envVars.contains("SSH_TTY") || envVars.contains("SSH_CLIENT") {
+        return PAM_IGNORE
+    }
 
     let arguments = parseArguments(argc: argc, argv: argv)
     var reason = arguments["reason"] ?? DEFAULT_REASON
